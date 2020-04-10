@@ -1,0 +1,46 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+pr:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: TerraformInstaller@0
+  inputs:
+    terraformVersion: '0.12.20'
+- task: TerraformCLI@0
+  inputs:
+    command: 'init'
+    backendType: 'azurerm'
+    backendServiceArm: '社内従量課金プラン_Dev_Ops_TED_tsushi (7577383f-1b95-479e-b32d-3c38c6166cc9)'
+    backendAzureRmResourceGroupName: 'remove-spike-rg'
+    backendAzureRmStorageAccountName: 'tsushispike'
+    backendAzureRmContainerName: 'tfstate'
+    backendAzureRmKey: 'example.tfstate'
+
+- task: CmdLine@2
+  displayName: Switch to Master
+  inputs:
+    script: |
+      CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+      git switch master
+      git pull
+      echo "##vso[task.setvariable variable=CURRENT_BRANCH;]$CURRENT_BRANCH"
+
+- task: TerraformCLI@0
+  displayName: Terraform Apply to Master
+  inputs:
+    command: 'apply'
+
+- task: CmdLine@2
+  displayName: Switch to $(CURRENT_BRANCH)
+  inputs:
+    script: |
+      echo $CURRENT_BRANCH
+      git switch $CURRENT_BRANCH
+      git pull
