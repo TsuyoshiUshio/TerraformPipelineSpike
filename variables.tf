@@ -7,7 +7,7 @@ variable "example1" {
 variable "example2" {
   description = "Example variable 2"
   type        = string
-  default     = "example2"
+  default     = "abc"
 }
 
 variable "subscription_id" {
