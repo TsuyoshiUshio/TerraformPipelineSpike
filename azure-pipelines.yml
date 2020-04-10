@@ -14,15 +14,13 @@ steps:
   displayName: Install terraform
   inputs:
     terraformVersion: '0.12.20'
+
 - task: TerraformCLI@0
   inputs:
     command: 'init'
+    commandOptions: '-var ''subscription_id=7577383f-1b95-479e-b32d-3c38c6166cc9'''
     backendType: 'azurerm'
-    backendServiceArm: '社内従量課金プラン_Dev_Ops_TED_tsushi (- task: TerraformCLI@0
-  inputs:
-    command: 'apply'
-    environmentServiceName: '社内従量課金プラン_Dev_Ops_TED_tsushi (7577383f-1b95-479e-b32d-3c38c6166cc9)'
-    commandOptions: '-var ''subscription_id=7577383f-1b95-479e-b32d-3c38c6166cc9''')'
+    backendServiceArm: '社内従量課金プラン_Dev_Ops_TED_tsushi (7577383f-1b95-479e-b32d-3c38c6166cc9)'
     backendAzureRmResourceGroupName: 'remove-spike-rg'
     backendAzureRmStorageAccountName: 'tsushispike'
     backendAzureRmContainerName: 'tfstate'
@@ -41,6 +39,8 @@ steps:
   displayName: Terraform Apply to Master
   inputs:
     command: 'apply'
+    commandOptions: '-var ''subscription_id=7577383f-1b95-479e-b32d-3c38c6166cc9'''
+    environmentServiceName: '社内従量課金プラン_Dev_Ops_TED_tsushi (7577383f-1b95-479e-b32d-3c38c6166cc9)'
 
 
 - task: CmdLine@2
