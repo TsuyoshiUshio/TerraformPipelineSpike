@@ -38,7 +38,6 @@ steps:
   inputs:
     command: 'apply'
     environmentServiceName: '社内従量課金プラン_Dev_Ops_TED_tsushi (7577383f-1b95-479e-b32d-3c38c6166cc9)'
-    commandOptions: '-var ''subscription_id=7577383f-1b95-479e-b32d-3c38c6166cc9'''
 
 - task: CmdLine@2
   displayName: Switch to $(CURRENT_BRANCH)
