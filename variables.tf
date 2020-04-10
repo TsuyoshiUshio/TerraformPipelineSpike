@@ -13,4 +13,5 @@ variable "example2" {
 variable "subscription_id" {
     type = string
     description = "Subscription ID"
+    default = ""
 }
