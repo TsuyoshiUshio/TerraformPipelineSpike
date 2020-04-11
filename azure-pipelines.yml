@@ -28,6 +28,7 @@ steps:
   displayName: Switch to Master
   inputs:
     script: |
+      env
       git branch
       CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
       git switch master
