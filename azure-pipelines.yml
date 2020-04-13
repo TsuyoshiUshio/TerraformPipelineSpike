@@ -20,7 +20,7 @@ steps:
     folderPath: '\'
     buildDefinition: 'TsuyoshiUshio.TerrformApply.CI'
     setBranch: true
-    Branch: 'master'
+    Branch: 'refs/heads/master'
     targetType: 'inline'
     buildParameters: '[{"hello":"world"}]'
     customPrefix: 'Run'
