@@ -22,7 +22,7 @@ steps:
     buildParameters: '[{"hello":"world"}]'
     customPrefix: 'Run'
     waitForQueuedBuildsToFinish: true
-    waitRefreshTime: '30'
+    waitRefreshTime: '10'
     waitTimeOut: '120'
     storeInOutputVariable: false
 
