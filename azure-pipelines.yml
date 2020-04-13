@@ -15,9 +15,11 @@ steps:
     serviceConnection: 'RunPipline Connection'
     project: 'Test Project'
     folderPath: '\'
-    buildDefinition: 'Test Project'
+    buildDefinition: 'TsuyoshiUshio.TerraformPipelineSpike (1)'
     setBranch: true
     Branch: '$(Build.SourceBranch)'
+    targetType: 'inline'
+    buildParameters: '# Add your variables here'
     waitForQueuedBuildsToFinish: false
     storeInOutputVariable: false
 - task: CmdLine@2
