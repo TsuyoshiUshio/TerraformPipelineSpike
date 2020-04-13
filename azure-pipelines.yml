@@ -10,35 +10,16 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: 11645770-d18e-11e8-8f5b-1b8b62612b3b@0
-  displayName: terraform install
+- task: RunPipelines@1
   inputs:
-    terraformVersion: '0.12.20'
-- task: TerraformCLI@0
-  inputs:
-    command: 'init'
-    backendType: 'azurerm'
-    backendServiceArm: '社内従量課金プラン_Dev_Ops_TED_tsushi (7577383f-1b95-479e-b32d-3c38c6166cc9)'
-    backendAzureRmResourceGroupName: 'remove-spike-rg'
-    backendAzureRmStorageAccountName: 'tsushispike'
-    backendAzureRmContainerName: 'tfstate'
-    backendAzureRmKey: 'example.tfstate'
-
-- task: CmdLine@2
-  displayName: Switch to Master
-  inputs:
-    script: |
-      env
-      git branch
-      git switch master
-      git pull
-
-- task: TerraformCLI@0
-  displayName: Terraform Apply to Master
-  inputs:
-    command: 'apply'
-    environmentServiceName: '社内従量課金プラン_Dev_Ops_TED_tsushi (7577383f-1b95-479e-b32d-3c38c6166cc9)'
-
+    serviceConnection: 'RunPipline Connection'
+    project: 'Test Project'
+    folderPath: '\'
+    buildDefinition: 'Test Project'
+    setBranch: true
+    Branch: '$(Build.SourceBranch)'
+    waitForQueuedBuildsToFinish: false
+    storeInOutputVariable: false
 - task: CmdLine@2
   displayName: Switch to $(CURRENT_BRANCH)
   inputs:
