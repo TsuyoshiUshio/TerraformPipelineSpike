@@ -13,6 +13,24 @@ pool:
 
 steps:
 - task: RunPipelines@1
+  displayName: Terraform Apply (Master Branch)
+  inputs:
+    serviceConnection: 'Run Pipeline Service Connection'
+    project: 'syncier test'
+    folderPath: '\'
+    buildDefinition: 'TsuyoshiUshio.TerrformApply.CI'
+    setBranch: true
+    Branch: 'master'
+    targetType: 'inline'
+    buildParameters: '[{"hello":"world"}]'
+    customPrefix: 'Run'
+    waitForQueuedBuildsToFinish: true
+    waitRefreshTime: '10'
+    waitTimeOut: '120'
+    storeInOutputVariable: false
+    
+- task: RunPipelines@1
+  diplayName: Terraform Apply ($(Build.SourceBranch))
   inputs:
     serviceConnection: 'Run Pipeline Service Connection'
     project: 'syncier test'
@@ -27,13 +45,3 @@ steps:
     waitRefreshTime: '10'
     waitTimeOut: '120'
     storeInOutputVariable: false
-
-
-- task: CmdLine@2
-  displayName: Switch to $(CURRENT_BRANCH)
-  inputs:
-    script: |
-      echo "BUILD_SOURCEBRANCH: ${BUILD_SOURCEBRANCH}"
-      echo "System.PullRequest.SourceBranch: $(System.PullRequest.SourceBranch)"
-      git switch $BUILD_SOURCEBRANCH
-      git pull

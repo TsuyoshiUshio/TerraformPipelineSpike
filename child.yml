@@ -25,7 +25,7 @@ steps:
     backendAzureRmKey: 'example.tfstate'
 
 - task: 721c3f90-d938-11e8-9d92-09d7594721b5@0
-  displayName: Terraform Apply to Master
+  displayName: Terraform Apply to $(Build.SourceBranch)
   inputs:
     command: 'apply'
     environmentServiceName: 'rguthrie-tsushi(7577383f-1b95-479e-b32d-3c38c6166cc9)'
