@@ -19,7 +19,7 @@ steps:
     setBranch: true
     Branch: '$(Build.SourceBranch)'
     targetType: 'inline'
-    buildParameters: '# Add your variables here'
+    buildParameters: '[{"hello":"world"}]'
     customPrefix: 'Run'
     waitForQueuedBuildsToFinish: false
     storeInOutputVariable: false
