@@ -15,13 +15,15 @@ steps:
     serviceConnection: 'RunPipline Connection'
     project: 'Test Project'
     folderPath: '\'
-    buildDefinition: 'TsuyoshiUshio.TerraformPipelineSpike (1)'
+    buildDefinition: 'Terraform.Apply'
     setBranch: true
     Branch: '$(Build.SourceBranch)'
     targetType: 'inline'
     buildParameters: '[{"hello":"world"}]'
     customPrefix: 'Run'
-    waitForQueuedBuildsToFinish: false
+    waitForQueuedBuildsToFinish: true
+    waitRefreshTime: '30'
+    waitTimeOut: '120'
     storeInOutputVariable: false
 
 - task: CmdLine@2
