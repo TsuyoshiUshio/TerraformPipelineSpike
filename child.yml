@@ -14,7 +14,7 @@ steps:
   displayName: terraform install
   inputs:
     terraformVersion: '0.12.20'
-- task: TerraformCLI@0
+- task: 721c3f90-d938-11e8-9d92-09d7594721b5@0
   inputs:
     command: 'init'
     backendType: 'azurerm'
@@ -24,7 +24,7 @@ steps:
     backendAzureRmContainerName: 'tfstate'
     backendAzureRmKey: 'example.tfstate'
 
-- task: TerraformCLI@0
+- task: 721c3f90-d938-11e8-9d92-09d7594721b5@0
   displayName: Terraform Apply to Master
   inputs:
     command: 'apply'
