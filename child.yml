@@ -18,7 +18,7 @@ steps:
   inputs:
     command: 'init'
     backendType: 'azurerm'
-    backendServiceArm: '社内従量課金プラン_Dev_Ops_TED_tsushi (7577383f-1b95-479e-b32d-3c38c6166cc9)'
+    backendServiceArm: '社内従量課金プラン_Dev_Ops_TED_tsushi(7577383f-1b95-479e-b32d-3c38c6166cc9)'
     backendAzureRmResourceGroupName: 'remove-spike-rg'
     backendAzureRmStorageAccountName: 'tsushispike'
     backendAzureRmContainerName: 'tfstate'
