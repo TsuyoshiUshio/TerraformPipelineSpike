@@ -28,9 +28,9 @@ steps:
     waitRefreshTime: '10'
     waitTimeOut: '120'
     storeInOutputVariable: false
-    
+
 - task: RunPipelines@1
-  diplayName: Terraform Apply ($(Build.SourceBranch))
+  displayName: Terraform Apply ($(Build.SourceBranch))
   inputs:
     serviceConnection: 'Run Pipeline Service Connection'
     project: 'syncier test'
