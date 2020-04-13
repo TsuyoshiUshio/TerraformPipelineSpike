@@ -12,10 +12,10 @@ pool:
 steps:
 - task: RunPipelines@1
   inputs:
-    serviceConnection: 'RunPipline Connection'
-    project: 'Test Project'
+    serviceConnection: 'Run Pipeline Service Connection'
+    project: 'syncier test'
     folderPath: '\'
-    buildDefinition: 'Terraform.Apply'
+    buildDefinition: 'TsuyoshiUshio.TerrformApply.CI'
     setBranch: true
     Branch: '$(Build.SourceBranch)'
     targetType: 'inline'
@@ -25,6 +25,7 @@ steps:
     waitRefreshTime: '30'
     waitTimeOut: '120'
     storeInOutputVariable: false
+
 
 - task: CmdLine@2
   displayName: Switch to $(CURRENT_BRANCH)
