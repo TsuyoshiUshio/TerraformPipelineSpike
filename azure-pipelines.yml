@@ -20,8 +20,10 @@ steps:
     Branch: '$(Build.SourceBranch)'
     targetType: 'inline'
     buildParameters: '# Add your variables here'
+    customPrefix: 'Run'
     waitForQueuedBuildsToFinish: false
     storeInOutputVariable: false
+
 - task: CmdLine@2
   displayName: Switch to $(CURRENT_BRANCH)
   inputs:
