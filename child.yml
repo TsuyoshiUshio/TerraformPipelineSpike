@@ -4,16 +4,28 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+- none
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: 11645770-d18e-11e8-8f5b-1b8b62612b3b@0
+  displayName: terraform install
+  inputs:
+    terraformVersion: '0.12.20'
+- task: TerraformCLI@0
+  inputs:
+    command: 'init'
+    backendType: 'azurerm'
+    backendServiceArm: '社内従量課金プラン_Dev_Ops_TED_tsushi (7577383f-1b95-479e-b32d-3c38c6166cc9)'
+    backendAzureRmResourceGroupName: 'remove-spike-rg'
+    backendAzureRmStorageAccountName: 'tsushispike'
+    backendAzureRmContainerName: 'tfstate'
+    backendAzureRmKey: 'example.tfstate'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: TerraformCLI@0
+  displayName: Terraform Apply to Master
+  inputs:
+    command: 'apply'
+    environmentServiceName: '社内従量課金プラン_Dev_Ops_TED_tsushi (7577383f-1b95-479e-b32d-3c38c6166cc9)'
