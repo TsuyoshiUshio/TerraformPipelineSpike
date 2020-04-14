@@ -91,5 +91,3 @@ This Pipeline assumes that there is no PR from Fork repo.
 az login 
 terraform init -backend-config=storage_account_name=<YOUR_STORAGE_ACCOUNT> -backend-config=container_name=tfstate -backend-config=resource_group_name=remove-spike-rg -backend-config=key=example.tfstate
 ```
-
-
