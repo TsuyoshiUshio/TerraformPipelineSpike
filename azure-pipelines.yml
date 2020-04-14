@@ -23,7 +23,7 @@ steps:
     Branch: 'refs/heads/master'
     targetType: 'inline'
     buildParameters: '[{"hello":"world"}]'
-    customPrefix: 'Run'
+    customPrefix: 'Master.'
     waitForQueuedBuildsToFinish: true
     waitRefreshTime: '10'
     waitTimeOut: '120'
@@ -41,7 +41,7 @@ steps:
     Branch: '$(Build.SourceBranch)'
     targetType: 'inline'
     buildParameters: '[{"hello":"world"}]'
-    customPrefix: 'Run'
+    customPrefix: '$(Build.SourceBranch).'
     waitForQueuedBuildsToFinish: true
     waitRefreshTime: '10'
     waitTimeOut: '120'
