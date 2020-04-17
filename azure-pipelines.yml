@@ -11,7 +11,16 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  - group: pullrequest.state
+
 steps:
+- template: check_status_template.yml
+  parameters:
+    PullRequestNumber: $(PullRequestNumber)
+    ExpireDate: $(ExpireDate)
+    Status: $(Status)
+
 - task: RunPipelines@1
   displayName: Terraform Apply (Master Branch)
   inputs:
@@ -28,6 +37,12 @@ steps:
     waitRefreshTime: '10'
     waitTimeOut: '120'
     storeInOutputVariable: false
+- template: update_status_template.yml
+  parameters:
+    PullRequestNumber: $(PullRequestNumber)
+    ExpireDate: $(ExpireDate)
+    CurrentStatus: $(Status)
+    NewStatus: 'MasterApplied'
 
 - task: RunPipelines@1
   displayName: Terraform Apply ($(Build.SourceBranch))
@@ -46,3 +61,10 @@ steps:
     waitRefreshTime: '10'
     waitTimeOut: '120'
     storeInOutputVariable: false
+- template: update_status_template.yml
+  parameters:
+    PullRequestNumber: $(PullRequestNumber)
+    ExpireDate: $(ExpireDate)
+    CurrentStatus: $(Status)
+    NewStatus: 'Completed'
+

@@ -1,0 +1,74 @@
+# Check status and update the current state
+parameters:
+- name: PullRequestNumber
+  type: string
+- name: ExpireDate
+  type: string
+- name: Status
+  type: string
+- name: expireDurationDays
+  type: number
+  default: 9
+steps:
+- task: AzureCLI@2
+  displayName: Azure CLI
+  inputs:
+    azureSubscription: mySubscription
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az extension add --name azure-devops
+
+      declare organizationURL=""
+      declare project=""
+      declare id=""
+
+      function initialize() {
+        organizationURL=$(System.CollectionUri)
+        project=$(System.TeamProject)
+        id=$(az pipelines variable-group list --org $organizationURL --project "${project}" --group-name "pullrequest.state" | jq -r '.[0] | .id')
+      }
+
+      function getNewExpireDate() {
+        current=$(date "+%s")
+        newExpireDate=$((current + (3600 * 24 * $(expireDurationDays))))
+        echo $newExpireDate
+      }
+
+      function createStatusFromNew() {
+        initialize()        
+        newExpireDate=`getNewExpireDate`
+
+        az pipelines variable-group variable update --id $id --name "PullRequestNumber" --value "$(System.PullRequest.PullRequestNumber)" --org $organizationURL --project "${project}" 
+        az pipelines variable-group variable update --id $id --name "ExpireDate" --value "$(date --date @${newExpireDate} "+%m/%d/%Y %H:%M")" --org $organizationURL --project "${project}" 
+        az pipelines variable-group variable update --id $id --name "Status" --value "Started" --org $organizationURL --project "${project}" 
+      }
+
+      function updateStatusAborted() {
+        initialize()        
+        az pipelines variable-group variable update --id $id --name "Status" --value "Aborted" --org $organizationURL --project "${project}" 
+      }
+
+      # Check if it is expired. 
+      expire=$(date -d "$(ExpireDate)" "+%s")
+      current=$(date "+%s")
+      delta=$(($current - $expire))
+      expireDuration=$((3600 * 24 * $(expireDurationDays)))
+      if [ $delta -lt $expireDuration ] && [ $Status != 'Aborted' ]; then 
+        echo "Pull Request: State expired: ${ExpireDate} Status: Aborted"
+        updateStatusAborted()
+        exit 1
+      else 
+        if [ $Status == 'Completed' ] || [ $Status == 'Aborted' ]; then
+          echo "Status: ${Status}"
+          createStatusFromNew()
+        else 
+          if [ "$(System.PullRequest.PullRequestNumber)" == "$(PullRequestNumber)"]; then
+            createStatusFromNew()
+          else
+             echo "Locked by PullRequest: $(PullRequestNumber)"
+             exit 1; 
+          fi 
+        fi 
+      fi 
+
