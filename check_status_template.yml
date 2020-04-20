@@ -77,7 +77,7 @@ steps:
           echo "Status: ${{ parameters.Status }}"
           createStatusFromNew
         else 
-          if [ "$(System.PullRequest.PullRequestNumber)" == "${{ parameters.PullRequestNumber }}"]; then
+          if [ "$(System.PullRequest.PullRequestNumber)" == "${{ parameters.PullRequestNumber }}" ]; then
             echo "Status: ${{ parameters.Status }}, PullRequestNumber Env: $(System.PullRequest.PullRequestNumber) Parameter: ${{ parameters.PullRequestNumber }}"
             createStatusFromNew
           else
