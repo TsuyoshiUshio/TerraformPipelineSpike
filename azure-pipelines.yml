@@ -23,6 +23,7 @@ steps:
 
 - task: RunPipelines@1
   displayName: Terraform Apply (Master Branch)
+  condition: and(succeeded(), eq(variables['Status', 'Started']))
   inputs:
     serviceConnection: 'Run Pipeline Service Connection'
     project: 'syncier test'
@@ -46,7 +47,7 @@ steps:
 
 - task: RunPipelines@1
   displayName: Terraform Apply ($(Build.SourceBranch))
-  condition: succeededOrFailed()
+  condition: and(succeeded(), eq(variables['Status', 'MasterApplied']))
   inputs:
     serviceConnection: 'Run Pipeline Service Connection'
     project: 'syncier test'
