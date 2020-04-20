@@ -81,7 +81,7 @@ steps:
             echo "Status: ${{ parameters.Status }}, PullRequestNumber Env: $(System.PullRequest.PullRequestNumber) Parameter: ${{ parameters.PullRequestNumber }}"
             createStatusFromNew
           else
-             echo "Locked by PullRequest: ${{ parameters.PullRequestNumber }}"
+             echo "Locked by PullRequest: ${{ parameters.PullRequestNumber }}, Current Status: ${{ parameters.Status }} "
              exit 1; 
           fi 
         fi 
