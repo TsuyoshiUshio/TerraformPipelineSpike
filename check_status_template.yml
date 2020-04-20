@@ -70,10 +70,11 @@ steps:
         exit 1
       else 
         if [ ${{ parameters.Status }} == 'Completed' ] || [ ${{ parameters.Status }} == 'Aborted' ]; then
-          echo "Status: ${Status}"
+          echo "Status: ${{ parameters.Status }}"
           createStatusFromNew
         else 
           if [ "$(System.PullRequest.PullRequestNumber)" == "${{ parameters.PullRequestNumber }}"]; then
+            echo "Status: ${{ parameters.Status }}, PullRequestNumber Env: $(System.PullRequest.PullRequestNumber) Parameter: ${{ parameters.PullRequestNumber }}"
             createStatusFromNew
           else
              echo "Locked by PullRequest: ${{ parameters.PullRequestNumber }}"
