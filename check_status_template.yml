@@ -36,7 +36,7 @@ steps:
       }
 
       function createStatusFromNew() {
-        initialize()        
+        initialize
         newExpireDate=$(getNewExpireDate)
 
         az pipelines variable-group variable update --id $id --name "PullRequestNumber" --value "$(System.PullRequest.PullRequestNumber)" --org $organizationURL --project "${project}" 
@@ -45,7 +45,7 @@ steps:
       }
 
       function updateStatusAborted() {
-        initialize()        
+        initialize
         az pipelines variable-group variable update --id $id --name "Status" --value "Aborted" --org $organizationURL --project "${project}" 
       }
 
@@ -56,15 +56,15 @@ steps:
       expireDuration=$((3600 * 24 * $(expireDurationDays)))
       if [ $delta -lt $expireDuration ] && [ $Status != 'Aborted' ]; then 
         echo "Pull Request: State expired: ${ExpireDate} Status: Aborted"
-        updateStatusAborted()
+        updateStatusAborted
         exit 1
       else 
         if [ $Status == 'Completed' ] || [ $Status == 'Aborted' ]; then
           echo "Status: ${Status}"
-          createStatusFromNew()
+          createStatusFromNew
         else 
           if [ "$(System.PullRequest.PullRequestNumber)" == "$(PullRequestNumber)"]; then
-            createStatusFromNew()
+            createStatusFromNew
           else
              echo "Locked by PullRequest: $(PullRequestNumber)"
              exit 1; 

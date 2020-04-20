@@ -38,7 +38,7 @@ steps:
       }
 
       function updateStatus() {
-        initialize()        
+        initialize        
         newExpireDate=`getNewExpireDate`
 
         az pipelines variable-group variable update --id $id --name "PullRequestNumber" --value "$(System.PullRequest.PullRequestNumber)" --org $organizationURL --project "${project}" 
