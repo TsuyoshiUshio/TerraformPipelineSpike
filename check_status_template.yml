@@ -31,7 +31,7 @@ steps:
 
       function getNewExpireDate() {
         current=$(date "+%s")
-        newExpireDate=$((current + (3600 * 24 * $(expireDurationDays))))
+        newExpireDate=$((current + (3600 * 24 * ${{ parameters.expireDurationDays }})))
         echo $newExpireDate
       }
 
@@ -53,7 +53,7 @@ steps:
       expire=$(date -d "${{ parameters.ExpireDate }}" "+%s")
       current=$(date "+%s")
       delta=$(($current - $expire))
-      expireDuration=$((3600 * 24 * $(expireDurationDays)))
+      expireDuration=$((3600 * 24 * ${{ parameters.expireDurationDays }}))
       if [ $delta -lt $expireDuration ] && [ ${{ parameters.Status }} != 'Aborted' ]; then 
         echo "Pull Request: State expired: ${{ parameters.ExpireDate }} Status: Aborted"
         updateStatusAborted
