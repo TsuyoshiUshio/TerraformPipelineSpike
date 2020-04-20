@@ -7,7 +7,7 @@ steps:
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
-      az extension add --name azure-devops
+      # az extension add --name azure-devops
       organizationURL=$(System.CollectionUri)
       project=$(System.TeamProject)
       id=$(az pipelines variable-group list --org $organizationURL --project "${project}" --group-name "pullrequest.state" | jq -r '.[0] | .id')

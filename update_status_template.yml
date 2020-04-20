@@ -19,7 +19,7 @@ steps:
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
-      az extension add --name azure-devops
+      # az extension add --name azure-devops
 
       declare organizationURL=""
       declare project=""
