@@ -52,7 +52,10 @@ steps:
 
       function updateStatusAborted() {
         initialize
+        newExpireDate=$(getNewExpireDate)
         echo "*** id: ${id}"
+
+        az pipelines variable-group variable update --id $id --name "ExpireDate" --value "$(date --date @${newExpireDate} "+%m/%d/%Y %H:%M")" --org $organizationURL --project "${project}" 
         az pipelines variable-group variable update --id $id --name "Status" --value "Aborted" --org $organizationURL --project "${project}" 
       }
 
