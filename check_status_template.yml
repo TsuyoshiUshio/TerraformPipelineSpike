@@ -27,6 +27,7 @@ steps:
         organizationURL=$(System.CollectionUri)
         project=$(System.TeamProject)
         id=$(az pipelines variable-group list --org $organizationURL --project "${project}" --group-name "pullrequest.state" | jq -r '.[0] | .id')
+        echo "** initialize id: ${id}"   
       }
 
       function getNewExpireDate() {
