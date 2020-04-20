@@ -46,6 +46,7 @@ steps:
 
       function updateStatusAborted() {
         initialize
+        echo "*** id: ${id}"
         az pipelines variable-group variable update --id $id --name "Status" --value "Aborted" --org $organizationURL --project "${project}" 
       }
 
