@@ -29,7 +29,7 @@ steps:
 
       function initialize() {
         organizationURL=$(System.CollectionUri)
-        project=$(System.TeamProject)
+        project="$(System.TeamProject)"
         echo "** organizationURL: ${organizationURL}  project: ${project} "
         id=$(az pipelines variable-group list --org $organizationURL --project "${project}" --group-name "pullrequest.state" | jq -r '.[0] | .id')
         echo "** initialize id: ${id}"   
