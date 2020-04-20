@@ -64,6 +64,10 @@ steps:
       current=$(date "+%s")
       delta=$(($current - $expire))
       expireDuration=$((3600 * 24 * ${{ parameters.expireDurationDays }}))
+
+      # Logging the condition 
+      echo "expire: ${expire}, current: ${current}, delta: ${delta}, expireDuration: ${expireDuration}"
+
       if [ $delta -lt $expireDuration ] && [ ${{ parameters.Status }} != 'Aborted' ]; then 
         echo "Pull Request: State expired: ${{ parameters.ExpireDate }} Status: Aborted"
         updateStatusAborted
