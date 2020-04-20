@@ -1,11 +1,5 @@
 # Check status and update the current state
 parameters:
-- name: PullRequestNumber
-  type: string
-- name: ExpireDate
-  type: string
-- name: CurrentStatus
-  type: string
 - name: NewStatus
   type: string
 - name: expireDurationDays
@@ -36,7 +30,7 @@ steps:
 
       function getNewExpireDate() {
         current=$(date "+%s")
-        newExpireDate=$((current + (3600 * 24 * $(expireDurationDays))))
+        newExpireDate=$((current + (3600 * 24 * ${{ expireDurationDays }})))
         echo $newExpireDate
       }
 
@@ -46,7 +40,7 @@ steps:
 
         az pipelines variable-group variable update --id $id --name "PullRequestNumber" --value "$(System.PullRequest.PullRequestNumber)" --org $organizationURL --project "${project}" 
         az pipelines variable-group variable update --id $id --name "ExpireDate" --value "$(date --date @${newExpireDate} "+%m/%d/%Y %H:%M")" --org $organizationURL --project "${project}" 
-        az pipelines variable-group variable update --id $id --name "Status" --value $(NewStatus) --org $organizationURL --project "${project}" 
+        az pipelines variable-group variable update --id $id --name "Status" --value ${{ NewStatus }} --org $organizationURL --project "${project}" 
       }
 
       updateStatus

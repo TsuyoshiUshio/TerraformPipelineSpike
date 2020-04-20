@@ -41,9 +41,6 @@ steps:
     storeInOutputVariable: false
 - template: update_status_template.yml
   parameters:
-    PullRequestNumber: $(PullRequestNumber)
-    ExpireDate: $(ExpireDate)
-    CurrentStatus: $(Status)
     NewStatus: 'MasterApplied'
 - template: fetch_current_status_template.yml
 
@@ -66,8 +63,5 @@ steps:
     storeInOutputVariable: false
 - template: update_status_template.yml
   parameters:
-    PullRequestNumber: $(PullRequestNumber)
-    ExpireDate: $(ExpireDate)
-    CurrentStatus: $(Status)
     NewStatus: 'Completed'
 
