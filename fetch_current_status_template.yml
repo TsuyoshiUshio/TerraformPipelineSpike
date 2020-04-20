@@ -2,12 +2,16 @@
 steps:
 - task: AzureCLI@2
   displayName: Fetch current status and update variables
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   inputs:
     azureSubscription: mySubscription
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
       # az extension add --name azure-devops
+      export AZURE_DEVOPS_EXT_PAT=$(System.AccessToken)
+      
       organizationURL=$(System.CollectionUri)
       project=$(System.TeamProject)
       id=$(az pipelines variable-group list --org $organizationURL --project "${project}" --group-name "pullrequest.state" | jq -r '.[0] | .id')

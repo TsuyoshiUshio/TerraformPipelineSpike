@@ -12,13 +12,16 @@ parameters:
 steps:
 - task: AzureCLI@2
   displayName: Check the current PR status
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   inputs:
     azureSubscription: mySubscription
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
       # az extension add --name azure-devops
-
+      export AZURE_DEVOPS_EXT_PAT=$(System.AccessToken)
+      
       declare organizationURL=""
       declare project=""
       declare id=""
