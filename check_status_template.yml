@@ -21,7 +21,7 @@ steps:
     inlineScript: |
       # az extension add --name azure-devops
       export AZURE_DEVOPS_EXT_PAT=$(System.AccessToken)
-      
+
       declare organizationURL=""
       declare project=""
       declare id=""
@@ -29,6 +29,7 @@ steps:
       function initialize() {
         organizationURL=$(System.CollectionUri)
         project=$(System.TeamProject)
+        echo "** organizationURL: ${organizationURL}  project: ${project} "
         id=$(az pipelines variable-group list --org $organizationURL --project "${project}" --group-name "pullrequest.state" | jq -r '.[0] | .id')
         echo "** initialize id: ${id}"   
       }
