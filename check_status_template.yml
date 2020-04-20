@@ -38,7 +38,7 @@ steps:
       function createStatusFromNew() {
         initialize
         newExpireDate=$(getNewExpireDate)
-
+        echo "*** id: ${id}"
         az pipelines variable-group variable update --id $id --name "PullRequestNumber" --value "$(System.PullRequest.PullRequestNumber)" --org $organizationURL --project "${project}" 
         az pipelines variable-group variable update --id $id --name "ExpireDate" --value "$(date --date @${newExpireDate} "+%m/%d/%Y %H:%M")" --org $organizationURL --project "${project}" 
         az pipelines variable-group variable update --id $id --name "Status" --value "Started" --org $organizationURL --project "${project}" 
