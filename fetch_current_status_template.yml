@@ -1,0 +1,19 @@
+# Check status and update the current state
+steps:
+- task: AzureCLI@2
+  displayName: Fetch current status and update variables
+  inputs:
+    azureSubscription: mySubscription
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az extension add --name azure-devops
+      organizationURL=$(System.CollectionUri)
+      project=$(System.TeamProject)
+      id=$(az pipelines variable-group list --org $organizationURL --project "${project}" --group-name "pullrequest.state" | jq -r '.[0] | .id')
+      pullRequestNumber=$(az pipelines variable-group variable list --id $id --org $organizationURL --project "${project}" --query PullRequestNumber.value | xargs)
+      expireDate=$(az pipelines variable-group variable list --id $id --org $organizationURL --project "${project}" --query ExpireDate.value | xargs)
+      status=$(az pipelines variable-group variable list --id $id --org $organizationURL --project "${project}" --query Status.value | xargs)
+      echo "##vso[task.setvariable variable=PullRequestNumber;]$pullRequestNumber"
+      echo "##vso[task.setvariable variable=ExpireDate;]$expireDate"
+      echo "##vso[task.setvariable variable=Status;]$status"

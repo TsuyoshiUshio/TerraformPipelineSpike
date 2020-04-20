@@ -13,7 +13,7 @@ parameters:
   default: 9
 steps:
 - task: AzureCLI@2
-  displayName: Azure CLI
+  displayName: Update Variable Group variables
   inputs:
     azureSubscription: mySubscription
     scriptType: bash

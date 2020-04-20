@@ -11,7 +11,7 @@ parameters:
   default: 9
 steps:
 - task: AzureCLI@2
-  displayName: Azure CLI
+  displayName: Check the current PR status
   inputs:
     azureSubscription: mySubscription
     scriptType: bash

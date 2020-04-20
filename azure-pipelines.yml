@@ -20,10 +20,11 @@ steps:
     PullRequestNumber: $(PullRequestNumber)
     ExpireDate: $(ExpireDate)
     Status: $(Status)
+- template: fetch_current_status_template.yml
 
 - task: RunPipelines@1
   displayName: Terraform Apply (Master Branch)
-  condition: and(succeeded(), eq(variables['Status', 'Started']))
+  condition: and(succeeded(), eq(variables['Status'], 'Started'))
   inputs:
     serviceConnection: 'Run Pipeline Service Connection'
     project: 'syncier test'
@@ -44,10 +45,11 @@ steps:
     ExpireDate: $(ExpireDate)
     CurrentStatus: $(Status)
     NewStatus: 'MasterApplied'
+- template: fetch_current_status_template.yml
 
 - task: RunPipelines@1
   displayName: Terraform Apply ($(Build.SourceBranch))
-  condition: and(succeeded(), eq(variables['Status', 'MasterApplied']))
+  condition: and(succeeded(), eq(variables['Status'], 'MasterApplied'))
   inputs:
     serviceConnection: 'Run Pipeline Service Connection'
     project: 'syncier test'
