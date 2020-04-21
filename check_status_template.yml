@@ -1,0 +1,89 @@
+# Check status and update the current state
+parameters:
+- name: PullRequestNumber
+  type: string
+- name: ExpireDate
+  type: string
+- name: Status
+  type: string
+- name: expireDurationDays
+  type: number
+  default: 6
+steps:
+- task: AzureCLI@2
+  displayName: Check the current PR status
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  inputs:
+    azureSubscription: mySubscription
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      env
+      # az extension add --name azure-devops
+      export AZURE_DEVOPS_EXT_PAT=$(System.AccessToken)
+
+      declare organizationURL=""
+      declare project=""
+      declare id=""
+
+      function initialize() {
+        organizationURL=$(System.CollectionUri)
+        project="$(System.TeamProject)"
+        echo "** organizationURL: ${organizationURL}  project: ${project} "
+        id=$(az pipelines variable-group list --org $organizationURL --project "${project}" --group-name "pullrequest.state" | jq -r '.[0] | .id')
+        echo "** initialize id: ${id}"   
+      }
+
+      function getNewExpireDate() {
+        current=$(date "+%s")
+        newExpireDate=$((current + (3600 * 24 * ${{ parameters.expireDurationDays }})))
+        echo $newExpireDate
+      }
+
+      function createStatusFromNew() {
+        initialize
+        newExpireDate=$(getNewExpireDate)
+        echo "*** id: ${id}"
+        az pipelines variable-group variable update --id $id --name "PullRequestNumber" --value "$(System.PullRequest.PullRequestNumber)" --org $organizationURL --project "${project}" 
+        az pipelines variable-group variable update --id $id --name "ExpireDate" --value "$(date --date @${newExpireDate} "+%m/%d/%Y %H:%M")" --org $organizationURL --project "${project}" 
+        az pipelines variable-group variable update --id $id --name "Status" --value "Started" --org $organizationURL --project "${project}" 
+      }
+
+      function updateStatusAborted() {
+        initialize
+        newExpireDate=$(getNewExpireDate)
+        echo "*** id: ${id}"
+
+        az pipelines variable-group variable update --id $id --name "ExpireDate" --value "$(date --date @${newExpireDate} "+%m/%d/%Y %H:%M")" --org $organizationURL --project "${project}" 
+        az pipelines variable-group variable update --id $id --name "Status" --value "Aborted" --org $organizationURL --project "${project}" 
+      }
+
+      # Check if it is expired. 
+      expire=$(date -d "${{ parameters.ExpireDate }}" "+%s")
+      current=$(date "+%s")
+      delta=$(($expire - $current))
+      expireDuration=$((3600 * 24 * ${{ parameters.expireDurationDays }}))
+
+      # Logging the condition 
+      echo "expire: ${expire}, current: ${current}, delta: ${delta}, expireDuration: ${expireDuration}"
+
+      if [ $delta -lt 0 ] && [ ${{ parameters.Status }} != 'Aborted' -a  ${{ parameters.Status }} != 'Completed' ]; then 
+        echo "Pull Request: State expired: ${{ parameters.ExpireDate }} Status: Aborted"
+        updateStatusAborted
+        exit 1
+      else 
+        if [ ${{ parameters.Status }} == 'Completed' ] || [ ${{ parameters.Status }} == 'Aborted' ]; then
+          echo "Status: ${{ parameters.Status }}"
+          createStatusFromNew
+        else 
+          if [ "$(System.PullRequest.PullRequestNumber)" == "${{ parameters.PullRequestNumber }}" ]; then
+            echo "Status: ${{ parameters.Status }}, PullRequestNumber Env: $(System.PullRequest.PullRequestNumber) Parameter: ${{ parameters.PullRequestNumber }}"
+            echo "Skip update State."
+          else
+             echo "Locked by PullRequest: ${{ parameters.PullRequestNumber }}, Current Status: ${{ parameters.Status }} "
+             exit 1; 
+          fi 
+        fi 
+      fi 
+

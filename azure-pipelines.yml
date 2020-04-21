@@ -3,47 +3,65 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+trigger:
+- none
 pr:
 - master
 
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  - group: pullrequest.state
+
 steps:
-- task: 11645770-d18e-11e8-8f5b-1b8b62612b3b@0
-  displayName: terraform install
-  inputs:
-    terraformVersion: '0.12.20'
-- task: TerraformCLI@0
-  inputs:
-    command: 'init'
-    backendType: 'azurerm'
-    backendServiceArm: '社内従量課金プラン_Dev_Ops_TED_tsushi (7577383f-1b95-479e-b32d-3c38c6166cc9)'
-    backendAzureRmResourceGroupName: 'remove-spike-rg'
-    backendAzureRmStorageAccountName: 'tsushispike'
-    backendAzureRmContainerName: 'tfstate'
-    backendAzureRmKey: 'example.tfstate'
+- template: check_status_template.yml
+  parameters:
+    PullRequestNumber: $(PullRequestNumber)
+    ExpireDate: $(ExpireDate)
+    Status: $(Status)
+- template: fetch_current_status_template.yml
 
-- task: CmdLine@2
-  displayName: Switch to Master
+- task: RunPipelines@1
+  displayName: Terraform Apply (Master Branch)
+  condition: and(succeeded(), eq(variables['Status'], 'Started'))
   inputs:
-    script: |
-      git branch
-      CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
-      git switch master
-      git pull
-      echo "##vso[task.setvariable variable=CURRENT_BRANCH;]$CURRENT_BRANCH"
+    serviceConnection: 'Run Pipeline Service Connection'
+    project: 'syncier test'
+    folderPath: '\'
+    buildDefinition: 'TsuyoshiUshio.TerrformApply.CI'
+    setBranch: true
+    Branch: 'refs/heads/master'
+    targetType: 'inline'
+    buildParameters: '[{"hello":"world"}]'
+    customPrefix: 'Master.'
+    waitForQueuedBuildsToFinish: true
+    waitRefreshTime: '10'
+    waitTimeOut: '120'
+    storeInOutputVariable: false
+- template: update_status_template.yml
+  parameters:
+    NewStatus: 'MasterApplied'
+- template: fetch_current_status_template.yml
 
-- task: TerraformCLI@0
-  displayName: Terraform Apply to Master
+- task: RunPipelines@1
+  displayName: Terraform Apply ($(Build.SourceBranch))
+  condition: and(succeeded(), eq(variables['Status'], 'MasterApplied'))
   inputs:
-    command: 'apply'
-    environmentServiceName: '社内従量課金プラン_Dev_Ops_TED_tsushi (7577383f-1b95-479e-b32d-3c38c6166cc9)'
+    serviceConnection: 'Run Pipeline Service Connection'
+    project: 'syncier test'
+    folderPath: '\'
+    buildDefinition: 'TsuyoshiUshio.TerrformApply.CI'
+    setBranch: true
+    Branch: '$(Build.SourceBranch)'
+    targetType: 'inline'
+    buildParameters: '[{"hello":"world"}]'
+    customPrefix: '$(Build.SourceBranch).'
+    waitForQueuedBuildsToFinish: true
+    waitRefreshTime: '10'
+    waitTimeOut: '120'
+    storeInOutputVariable: false
+- template: update_status_template.yml
+  parameters:
+    NewStatus: 'Completed'
 
-- task: CmdLine@2
-  displayName: Switch to $(CURRENT_BRANCH)
-  inputs:
-    script: |
-      echo $CURRENT_BRANCH
-      git switch $CURRENT_BRANCH
-      git pull
