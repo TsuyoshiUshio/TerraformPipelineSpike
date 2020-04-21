@@ -8,7 +8,7 @@ parameters:
   type: string
 - name: expireDurationDays
   type: number
-  default: 9
+  default: 6
 steps:
 - task: AzureCLI@2
   displayName: Check the current PR status
@@ -68,7 +68,7 @@ steps:
       # Logging the condition 
       echo "expire: ${expire}, current: ${current}, delta: ${delta}, expireDuration: ${expireDuration}"
 
-      if [ $delta -lt 0 ] && [ ${{ parameters.Status }} != 'Aborted' ]; then 
+      if [ $delta -lt 0 ] && [ [ ${{ parameters.Status }} != 'Aborted' ] && [ ${{ parameters.Status }} != 'Completed' ] ]; then 
         echo "Pull Request: State expired: ${{ parameters.ExpireDate }} Status: Aborted"
         updateStatusAborted
         exit 1

@@ -4,7 +4,7 @@ parameters:
   type: string
 - name: expireDurationDays
   type: number
-  default: 9
+  default: 6
 steps:
 - task: AzureCLI@2
   displayName: Update Variable Group variables

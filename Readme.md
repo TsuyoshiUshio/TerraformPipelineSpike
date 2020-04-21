@@ -9,6 +9,23 @@ To achieve this, I'm using Run Pipeline task that is developed by Brent.
 
 ## Create a storage account for terraform state. 
 
+## Configure Variable Group 
+You need to configure Variable Group to keep the state of the pipeline. You can use `steup_pr_state.sh` for this purpose. 
+
+The `<organization>` is the Azure Pipeline Organization. e.g. `https://dev.azure.com/yourorganization` , `<project>` is your project name of the Azure DevOps.
+
+```bash
+$ setup_pr_state.sh -o <organization> -p <project>
+```
+
+It will create three states with `pullrequest.state` variable group. 
+
+* **PullRequestNumber:** The number of the current PullRequest. Initial value is 0. 
+* **ExpireDate:** The expired date. By default it is 03/25/2010 14:40. The new expire date is 6 days after the pipeline execution. You can change the config at the `` on the  `check_status_template.yml` and `update_status_template.yml`. 
+* **Status:** The status of the pipeline. Possible values are `Started`, `MasterApplied`, `Completed`, `Aborted`
+
+
+
 ## Configure Pipeline
 There is some tips for configuring pipeline. 
 
