@@ -15,8 +15,3 @@ variable "subscription_id" {
     description = "Subscription ID"
     default = ""
 }
-
-variable "some" {
-  type = string
-  description = "parameter for causing error"
-}
