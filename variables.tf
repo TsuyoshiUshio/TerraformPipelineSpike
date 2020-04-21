@@ -16,7 +16,3 @@ variable "subscription_id" {
     default = ""
 }
 
-variable "some" {
-    type = string
-    description = "Should get stuck"
-}
