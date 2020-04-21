@@ -25,7 +25,6 @@ It will create three states with `pullrequest.state` variable group.
 * **Status:** The status of the pipeline. Possible values are `Started`, `MasterApplied`, `Completed`, `Aborted`
 
 
-
 ## Configure Pipeline
 There is some tips for configuring pipeline. 
 
