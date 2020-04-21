@@ -81,6 +81,12 @@ trigger:
 ### Tip 5. Avoid Lease Lock 
 Terraform backend lock lease on the Azure Storage. You need to avoid run the pipeline at the same times. (For this reason, I had to Tip 4.)
 
+### Tip 6. Give Administrator to the Build Service on the Variable groups
+
+Go the the Variables Group > Security, Give Administrator Role to the Build Service User. 
+
+![Variable Group Settings](img/variable_group_config.png)
+
 ## NOTE
 
 This Pipeline assumes that there is no PR from Fork repo.

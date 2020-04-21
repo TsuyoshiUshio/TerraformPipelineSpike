@@ -11,9 +11,20 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  - group: pullrequest.state
+
 steps:
+- template: check_status_template.yml
+  parameters:
+    PullRequestNumber: $(PullRequestNumber)
+    ExpireDate: $(ExpireDate)
+    Status: $(Status)
+- template: fetch_current_status_template.yml
+
 - task: RunPipelines@1
   displayName: Terraform Apply (Master Branch)
+  condition: and(succeeded(), eq(variables['Status'], 'Started'))
   inputs:
     serviceConnection: 'Run Pipeline Service Connection'
     project: 'syncier test'
@@ -28,10 +39,14 @@ steps:
     waitRefreshTime: '10'
     waitTimeOut: '120'
     storeInOutputVariable: false
+- template: update_status_template.yml
+  parameters:
+    NewStatus: 'MasterApplied'
+- template: fetch_current_status_template.yml
 
 - task: RunPipelines@1
   displayName: Terraform Apply ($(Build.SourceBranch))
-  condition: succeededOrFailed()
+  condition: and(succeeded(), eq(variables['Status'], 'MasterApplied'))
   inputs:
     serviceConnection: 'Run Pipeline Service Connection'
     project: 'syncier test'
@@ -46,3 +61,7 @@ steps:
     waitRefreshTime: '10'
     waitTimeOut: '120'
     storeInOutputVariable: false
+- template: update_status_template.yml
+  parameters:
+    NewStatus: 'Completed'
+
