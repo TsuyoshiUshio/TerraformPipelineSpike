@@ -6,6 +6,7 @@ This pipeline is a sample for PR flow of terraform.
 2. Apply Terraform on the Pull Request Branch.
 
 To achieve this, I'm using Run Pipeline task that is developed by Brent. 
+You can find All the State and Transition on the [Scenario](Scenario.md) documentation. 
 
 ## Create a storage account for terraform state. 
 

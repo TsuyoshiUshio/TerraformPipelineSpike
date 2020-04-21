@@ -20,3 +20,5 @@ You can setup the Variables Group
 | 8 | Error on Branch Apply | Completed, NotExpired, (any PR number) | Fail, Status=MasterApplied, ExpiredDate is updated, Success Master Apply and fail on Branch Apply |
 | 9 | Error on Branch Apply | MasterApplied, NotExpired, (current PR number) | Fail, Status=MasterApply, ExpiredDate is updated, Only run Branch Apply and fail |
 | 10 | Active PR with Expired | MasterApplied, Expired, (any PR number) | Fail, Status=Aborted, ExpiredDate is updated to new ExpiredDate |
+| 11 | Aborted PR with Expired | Aborted, Expired, (any PR number) | Success, Status=Completed, ExpiredDate is updated to new ExpiredDate, Run All pipeline |
+
