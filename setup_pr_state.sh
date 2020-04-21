@@ -18,3 +18,6 @@ while getopts ":o:p:" arg; do
         ;;
     esac
 done
+
+az pipelines variable-group create --org ${organization} --project ${project} --name ${stateName}
+
